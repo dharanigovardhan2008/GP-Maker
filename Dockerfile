@@ -14,6 +14,6 @@ COPY . .
 
 RUN mkdir -p uploads
 
-EXPOSE 5000
+EXPOSE 10000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:10000", "app:app"]
