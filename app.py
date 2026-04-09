@@ -68,7 +68,6 @@ HTML_TEMPLATE = '''
         .card {
             background: var(--card-bg);
             backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
             border: 1px solid var(--border);
             border-radius: 30px;
             padding: 32px;
@@ -89,15 +88,14 @@ HTML_TEMPLATE = '''
             padding: 45px 20px;
             text-align: center;
             position: relative;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s ease;
             cursor: pointer;
             background: rgba(255, 255, 255, 0.01);
         }
-        .upload-box:hover { border-color: var(--primary); background: rgba(129, 140, 248, 0.04); }
         
-        /* Green outline state when file is uploaded */
+        /* Green outline when file is uploaded */
         .upload-box.file-uploaded {
-            border: 2px solid var(--success);
+            border: 2px solid var(--success) !important;
             background: rgba(16, 185, 129, 0.05);
             box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
         }
@@ -107,9 +105,7 @@ HTML_TEMPLATE = '''
             opacity: 0; cursor: pointer; z-index: 10;
         }
 
-        .upload-icon { margin-bottom: 15px; display: block; transition: transform 0.3s ease; }
-        .upload-box.file-uploaded .upload-icon { transform: scale(0.9); }
-        .upload-text { color: #94a3b8; font-size: 14px; line-height: 1.6; }
+        .upload-text { color: #94a3b8; font-size: 14px; }
         .upload-text strong { color: #fff; }
 
         .file-name {
@@ -118,30 +114,25 @@ HTML_TEMPLATE = '''
             background: rgba(16, 185, 129, 0.1); padding: 12px; border-radius: 15px;
         }
 
-        .section-label { font-size: 13px; font-weight: 700; color: #cbd5e1; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 10px var(--primary); }
-
-        .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
         .chip {
-            font-size: 11px; font-weight: 600; padding: 10px 16px; 
+            font-size: 11px; font-weight: 600; padding: 10px 14px; 
             border-radius: 50px; border: 1px solid var(--border);
             background: rgba(255,255,255,0.04); color: #94a3b8;
             cursor: pointer; transition: all 0.2s ease;
         }
-        .chip:hover { border-color: rgba(255,255,255,0.2); color: #fff; }
         .chip.active {
             background: #ffffff; color: #000; border-color: #fff;
-            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
         }
 
         textarea {
             width: 100%; padding: 20px; border: 1px solid var(--border);
             border-radius: 20px; background: rgba(0,0,0,0.4);
-            font-size: 14px; color: #fff; resize: none; min-height: 120px;
+            font-size: 14px; color: #fff; resize: none; min-height: 110px;
             font-family: inherit; outline: none; transition: all 0.3s ease;
         }
 
-        /* Updated Generate Report Button Color */
+        /* Emerald/Teal Button */
         .btn {
             width: 100%; padding: 22px;
             background: linear-gradient(135deg, #059669, #10b981);
@@ -170,12 +161,8 @@ HTML_TEMPLATE = '''
             color: #cbd5e1; text-decoration: none;
             transition: all 0.3s ease;
         }
-        .insta-btn:hover {
-            background: rgba(255, 255, 255, 0.08); border-color: var(--secondary);
-            color: #fff; transform: translateY(-2px);
-        }
+        .insta-btn:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--secondary); color: #fff; }
         .insta-icon { fill: var(--primary); transition: fill 0.3s ease; }
-        .insta-btn:hover .insta-icon { fill: #fff; }
 
         @keyframes spin { to { transform: rotate(360deg); } }
         .spinner { width: 22px; height: 22px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; }
@@ -199,44 +186,39 @@ HTML_TEMPLATE = '''
             <div class="card-title">Step 1 &mdash; Presentation</div>
             <div class="upload-box" id="uploadBox">
                 <input type="file" id="file" accept=".ppt,.pptx" required>
-                <div class="upload-icon">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
-                <div class="upload-text"><strong>Click to upload</strong> your PPTX<br><span style="font-size: 11px; opacity: 0.6;">Files up to 50MB</span></div>
+                <div class="upload-text"><strong>Click to upload</strong> your PPTX file<br><span style="font-size: 11px; opacity: 0.6;">Maximum size 50MB</span></div>
                 <div class="file-name" id="fileName"><span id="fileNameText"></span></div>
             </div>
         </div>
 
         <div class="card">
-            <div class="card-title">Step 2 &mdash; Mentee Response</div>
+            <div class="card-title">Step 2 &mdash; Student Response</div>
             <div class="chips">
-                <span class="chip" data-target="mentee" data-val="I am doing well and attending all classes regularly.">Regular & Good</span>
-                <span class="chip" data-target="mentee" data-val="I am consistently following the course material and solving PYQs.">PYQ Focus</span>
-                <span class="chip" data-target="mentee" data-val="I am focusing on improving my technical skills and placement preparation.">Placement Prep</span>
-                <span class="chip" data-target="mentee" data-val="I have actively participated in recent hackathons and workshops.">Active Participation</span>
-                <span class="chip" data-target="mentee" data-val="I am working on my final year project with consistent milestones.">Project Milestone</span>
-                <span class="chip" data-target="mentee" data-val="I have maintained a steady GPA and am aiming for higher grades this sem.">GPA Focus</span>
-                <span class="chip" data-target="mentee" data-val="I am attending remedial sessions for my difficult subjects.">Remedial Attendance</span>
-                <span class="chip" data-target="mentee" data-val="I am strictly following the mentor's guidance for career planning.">Career Planning</span>
+                <span class="chip" data-target="mentee" data-val="I am attending all classes and doing well.">Regular</span>
+                <span class="chip" data-target="mentee" data-val="I am studying hard and solving old question papers.">Exam Prep</span>
+                <span class="chip" data-target="mentee" data-val="I am finishing all my assignments and records on time.">Assignments</span>
+                <span class="chip" data-target="mentee" data-val="I am working to get better marks in the next test.">Better Marks</span>
+                <span class="chip" data-target="mentee" data-val="I am learning new skills for my future job.">Job Skills</span>
+                <span class="chip" data-target="mentee" data-val="I am following all the advice given by my teacher.">Teacher Advice</span>
+                <span class="chip" data-target="mentee" data-val="I am taking extra help for my hard subjects.">Extra Help</span>
+                <span class="chip" data-target="mentee" data-val="I am trying my best to be active in class.">Active in Class</span>
             </div>
-            <textarea id="mentee_response" placeholder="Type or select a response..." required></textarea>
+            <textarea id="mentee_response" placeholder="Choose a button or type here..." required></textarea>
         </div>
 
         <div class="card">
-            <div class="card-title">Step 3 &mdash; Parent's Feedback</div>
+            <div class="card-title">Step 3 &mdash; Parents Feedback</div>
             <div class="chips">
-                <span class="chip" data-target="parent" data-val="We are happy with the progress and monitoring studies at home.">Satisfied</span>
-                <span class="chip" data-target="parent" data-val="We have noticed a significant improvement in discipline and habits.">Improved</span>
-                <span class="chip" data-target="parent" data-val="We ensure that our child maintains 100% attendance hereafter.">Attendance Assurance</span>
-                <span class="chip" data-target="parent" data-val="We are monitoring the student's preparation for upcoming placements.">Placement Monitoring</span>
-                <span class="chip" data-target="parent" data-val="We are satisfied with the college's focus on skill development.">Skill Focus</span>
-                <span class="chip" data-target="parent" data-val="We will encourage our child to participate in more extra-curriculars.">Engagement</span>
-                <span class="chip" data-target="parent" data-val="We appreciate the personalized mentoring sessions provided.">Appreciate Mentor</span>
-                <span class="chip" data-target="parent" data-val="We are keeping track of internal assessment marks regularly.">Assessment Tracking</span>
+                <span class="chip" data-target="parent" data-val="We are happy with the progress and check the studies at home.">Happy</span>
+                <span class="chip" data-target="parent" data-val="We see a good change in study habits at home.">Good Change</span>
+                <span class="chip" data-target="parent" data-val="We will make sure the student comes to college every day.">Daily Attendance</span>
+                <span class="chip" data-target="parent" data-val="We are checking the test marks and help them study.">Check Marks</span>
+                <span class="chip" data-target="parent" data-val="We like the way the college helps the students learn.">Good Learning</span>
+                <span class="chip" data-target="parent" data-val="We will help our child to study more at home.">Home Study</span>
+                <span class="chip" data-target="parent" data-val="We thank the teacher for the help and guidance.">Thanks Teacher</span>
+                <span class="chip" data-target="parent" data-val="We are keeping a close eye on the assignments.">Check Homework</span>
             </div>
-            <textarea id="parent_response" placeholder="Type or select a response..." required></textarea>
+            <textarea id="parent_response" placeholder="Choose a button or type here..." required></textarea>
         </div>
 
         <button type="submit" class="btn" id="submitBtn">Generate Report</button>
@@ -265,15 +247,14 @@ HTML_TEMPLATE = '''
         });
     });
 
-    // Handle file upload and UI change
     document.getElementById('file').addEventListener('change', function() {
-        const uploadBox = document.getElementById('uploadBox');
+        const box = document.getElementById('uploadBox');
         if (this.files.length > 0) {
             document.getElementById('fileNameText').textContent = this.files[0].name;
             document.getElementById('fileName').style.display = 'flex';
-            uploadBox.classList.add('file-uploaded');
+            box.classList.add('file-uploaded');
         } else {
-            uploadBox.classList.remove('file-uploaded');
+            box.classList.remove('file-uploaded');
         }
     });
 
@@ -286,7 +267,7 @@ HTML_TEMPLATE = '''
         
         submitBtn.disabled = true;
         status.className = 'status loading';
-        status.innerHTML = '<div class="spinner"></div> Processing Data...';
+        status.innerHTML = '<div class="spinner"></div> Making Report...';
         status.style.display = 'flex';
         bar.style.display = 'block';
         
@@ -302,16 +283,15 @@ HTML_TEMPLATE = '''
             const res = await fetch('/convert', { method: 'POST', body: formData });
             clearInterval(interval);
             fill.style.width = '100%';
-
             if (res.ok) {
                 const blob = await res.blob();
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'GP_Report.pdf';
+                a.download = 'Report.pdf';
                 a.click();
-                status.innerHTML = 'Report Generated Successfully!';
-            } else { throw new Error('Failed to generate report.'); }
+                status.innerHTML = 'Success!';
+            } else { throw new Error('Failed'); }
         } catch (err) {
             status.innerHTML = 'Error: ' + err.message;
         } finally {
